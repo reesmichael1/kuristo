@@ -1,7 +1,7 @@
 # Build the main executable
 [working-directory: 'build']
 build:
-    cmake -DCMAKE_BUILD_TYPE=Debug ..
+    cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ..
     make
 
 # Build the main executable in release mode

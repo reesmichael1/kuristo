@@ -1,3 +1,4 @@
+#include "parser.hpp"
 #include "tasks.hpp"
 
 #include <iostream>
@@ -9,12 +10,9 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  const auto table = tasks::load_from_file(argv[1]);
-  std::cout << table.description << "\n";
+  const auto table = parser::load_from_file(argv[1]);
 
-  for (const auto &task : table.tasks) {
-    std::cout << task.name << "\n";
-  }
+  tasks::run(table);
 
   return 0;
 }

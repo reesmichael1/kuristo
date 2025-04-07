@@ -14,7 +14,7 @@ struct TaskTable {
 };
 
 namespace tasks {
-TaskTable load_from_file(std::string_view path);
+void run(const TaskTable &);
 }
 
 #endif
