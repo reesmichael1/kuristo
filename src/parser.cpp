@@ -23,8 +23,17 @@ TaskTable parser::load_from_file(std::string_view path) {
       tags.push_back(tag.as_string());
     }
 
-    tasks.push_back(
-        Task{task.at("name").as_string(), task.at("cmd").as_string(), tags});
+    std::istringstream iss(task.at("cmd").as_string());
+    std::vector<std::string> cmd_words(std::istream_iterator<std::string>{iss},
+                                       std::istream_iterator<std::string>());
+
+    const auto cmd = cmd_words.at(0);
+    cmd_words.erase(cmd_words.begin());
+
+    tasks.push_back(Task{.name = task.at("name").as_string(),
+                         .cmd = cmd,
+                         .args = cmd_words,
+                         .tags = tags});
   }
 
   TaskTable result{};

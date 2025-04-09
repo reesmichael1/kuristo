@@ -4,8 +4,3 @@ description = "A basic demonstration of kuristo"
 name = "echo"
 cmd = "echo 'Hello, world!'"
 tags = [ "build" ]
-
-[[tasks]]
-name = "docker build"
-cmd = "docker build"
-tags = [ "build" ]

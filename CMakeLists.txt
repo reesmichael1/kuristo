@@ -14,6 +14,7 @@ include(cmake/CPM.cmake)
 CPMAddPackage("gh:ToruNiina/toml11@4.4.0")
 CPMAddPackage("gh:ikalnytskyi/termcolor@2.1.0")
 
-project(${ProjectName})
+project(${ProjectName} LANGUAGES CXX)
 
+find_package(Boost 1.0 COMPONENTS process) 
 add_subdirectory(src)
