@@ -2,5 +2,10 @@ description = "A basic demonstration of kuristo"
 
 [[tasks]]
 name = "echo"
-cmd = "echo 'Hello, world!'"
+cmd = "sleep 3; echo 'Hello, world!'"
+tags = [ "build" ]
+
+[[tasks]]
+name = "ls"
+cmd = "ls -l README.md"
 tags = [ "build" ]

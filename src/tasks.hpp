@@ -1,5 +1,5 @@
-#ifndef _TASK_TABLE_H_
-#define _TASK_TABLE_H_
+#ifndef TASK_TABLE_H
+#define TASK_TABLE_H
 
 #include "task.hpp"
 

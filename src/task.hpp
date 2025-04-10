@@ -1,5 +1,5 @@
-#ifndef _TASK_H_
-#define _TASK_H_
+#ifndef TASK_H
+#define TASK_H
 
 #include <string>
 #include <vector>

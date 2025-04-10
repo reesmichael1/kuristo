@@ -8,13 +8,11 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_LINKER_TYPE MOLD)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-
 include(cmake/CPM.cmake)
 CPMAddPackage("gh:ToruNiina/toml11@4.4.0")
 CPMAddPackage("gh:ikalnytskyi/termcolor@2.1.0")
 
 project(${ProjectName} LANGUAGES CXX)
+find_package(Boost 1.80 COMPONENTS process thread) 
 
-find_package(Boost 1.0 COMPONENTS process) 
 add_subdirectory(src)

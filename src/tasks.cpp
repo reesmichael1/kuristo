@@ -7,6 +7,7 @@
 #include <boost/asio/readable_pipe.hpp>
 #include <boost/process/v2/process.hpp>
 #include <boost/process/v2/stdio.hpp>
+#include <boost/thread/thread.hpp>
 #include <termcolor/termcolor.hpp>
 #include <toml.hpp>
 
@@ -29,32 +30,37 @@ bool is_builtin(std::string name) {
 
 void tasks::run(const TaskTable &table) {
   std::cout << table.description << "\n";
+  boost::thread_group threads{};
 
   for (const auto &task : table.tasks) {
-    boost::asio::io_context ctx;
-    boost::asio::readable_pipe rp{ctx};
+    threads.create_thread([task] {
+      boost::asio::io_context ctx;
+      boost::asio::readable_pipe rp{ctx};
 
-    if (is_builtin(task.cmd)) {
-      std::stringstream ss;
-      for (size_t i = 0; i < task.args.size(); ++i) {
-        if (i != 0) {
-          ss << " ";
+      if (is_builtin(task.cmd)) {
+        std::stringstream ss;
+        for (size_t i = 0; i < task.args.size(); ++i) {
+          if (i != 0) {
+            ss << " ";
+          }
+
+          ss << task.args.at(i);
         }
+        bp::process proc(ctx, "/usr/bin/sh", {"-c", task.cmd + " " + ss.str()},
+                         bp::process_stdio{.in = {}, .out = rp, .err = {}});
+        proc.wait();
 
-        ss << task.args.at(i);
+        std::string output{};
+        boost::system::error_code ec;
+        boost::asio::read(rp, boost::asio::dynamic_buffer(output), ec);
+        std::cout << termcolor::green << task.name << termcolor::reset << ": "
+                  << output << std::endl;
+      } else {
+        bp::process proc{ctx, task.cmd, task.args};
+        proc.wait();
       }
-      bp::process proc(ctx, "/usr/bin/sh", {"-c", task.cmd + " " + ss.str()},
-                       bp::process_stdio{.in = {}, .out = rp, .err = {}});
-      proc.wait();
-
-      std::string output{};
-      boost::system::error_code ec;
-      boost::asio::read(rp, boost::asio::dynamic_buffer(output), ec);
-      std::cout << termcolor::green << task.name << termcolor::reset << ": "
-                << output << std::endl;
-    } else {
-      bp::process proc{ctx, task.cmd, task.args};
-      proc.wait();
-    }
+    });
   }
+
+  threads.join_all();
 }
